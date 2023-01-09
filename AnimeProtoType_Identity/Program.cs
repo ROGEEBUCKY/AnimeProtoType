@@ -25,11 +25,11 @@ try
     if (args.Contains("/seed"))
         {
         Log.Information("Seeding database...");
-        SeedData.EnsureSeedData(app);
         Log.Information("Done seeding database. Exiting.");
         return;
         }
 
+    SeedData.EnsureSeedData(app);
     app.Run();
     }
 catch (Exception ex) when (ex.GetType().Name is not "StopTheHostException") // https://github.com/dotnet/runtime/issues/60600

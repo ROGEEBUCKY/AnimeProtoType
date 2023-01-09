@@ -1,4 +1,6 @@
-﻿using Duende.IdentityServer.Models;
+﻿using Duende.IdentityServer;
+using Duende.IdentityServer.Models;
+using static System.Net.WebRequestMethods;
 
 namespace AnimeProtoType_Identity
     {
@@ -39,14 +41,21 @@ namespace AnimeProtoType_Identity
                 ClientId = "interactive",
                 ClientSecrets = { new Secret("49C1A7E1-0C79-4A89-A3D6-A37998FB86B0".Sha256()) },
 
+                AllowedCorsOrigins ={ "https://localhost:7119"},
                 AllowedGrantTypes = GrantTypes.Code,
+                RequirePkce = true,
 
-                RedirectUris = { "https://localhost:44300/signin-oidc" },
+                RedirectUris = { "https://localhost:44300/signin-oidc","https://localhost:7119/swagger/oauth2-redirect.html","https://oauth.pstmn.io/v1/callback" },
                 FrontChannelLogoutUri = "https://localhost:44300/signout-oidc",
                 PostLogoutRedirectUris = { "https://localhost:44300/signout-callback-oidc" },
 
                 AllowOfflineAccess = true,
-                AllowedScopes = { "openid", "profile", "scope2" }
+                AllowedScopes = {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        IdentityServerConstants.StandardScopes.OfflineAccess
+                }
             },
             };
         }
