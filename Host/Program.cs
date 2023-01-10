@@ -1,62 +1,9 @@
-using AnimeProtoType.Host.Filter;
-using AnimeProtoType.Host.Middlewares;
-using Microsoft.AspNetCore.Mvc;
+using Host;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-builder.Services.AddSwaggerGen(async c =>
- {
-     c.OperationFilter<AuthorizeCheckOperationFilter>();
-
-     c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-         {
-         Type = SecuritySchemeType.OAuth2,
-         Flows = new OpenApiOAuthFlows
-             {
-             AuthorizationCode = new OpenApiOAuthFlow
-                 {
-                 AuthorizationUrl = new Uri("https://localhost:5001/connect/authorize"),
-                 TokenUrl = new Uri("https://localhost:5001/connect/token"),
-                 Scopes = new Dictionary<string, string>
-                                 {
-                                     {"openid", "kchjsad"}
-                                 }
-                 }
-             }
-
-         });
- });
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll",
-    builder =>
-    {
-        builder.AllowAnyOrigin()
-               .AllowAnyHeader()
-               .AllowAnyMethod();
-    });
-});
-builder.Services.AddApiVersioning(config => { 
-    config.DefaultApiVersion = new ApiVersion(1, 0);
-    config.AssumeDefaultVersionWhenUnspecified = true;
-    config.ReportApiVersions = true;
-});
-builder.Services.AddVersionedApiExplorer(options =>
-{
-    options.GroupNameFormat = "'v'VVV";
-    options.SubstituteApiVersionInUrl = true;
-});
-var app = builder.Build();
+var app = builder.Start();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
