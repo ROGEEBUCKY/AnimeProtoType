@@ -48,6 +48,17 @@ namespace AnimeProtoType_Identity
                     options.ClientSecret = "copy client secret from Google here";
                 });
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                               .AllowAnyHeader()
+                               .AllowAnyMethod();
+                    });
+            });
+
             return builder.Build();
             }
 
@@ -59,6 +70,7 @@ namespace AnimeProtoType_Identity
                 {
                 app.UseDeveloperExceptionPage();
                 }
+            app.UseCors();
 
             app.UseStaticFiles();
             app.UseRouting();
@@ -67,7 +79,6 @@ namespace AnimeProtoType_Identity
 
             app.MapRazorPages()
                 .RequireAuthorization();
-
             return app;
             }
         }
